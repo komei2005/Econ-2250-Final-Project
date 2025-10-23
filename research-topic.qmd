@@ -1,0 +1,9 @@
+---
+title: "research_topic"
+format: pdf
+editor: visual
+---
+
+## Research Topic: 
+
+Our research topic for this project is in regard to data from financial indicators for stocks in 2014 where we plan analyze and interpret the market conditions during that time frame and better understand it's correlation and growth over time. With over 700+ indicators being present and 6+ columns of useful quantitative data it also meets the requirements for the research topics. Some key points are Research and development, revenue, profit, etc..
