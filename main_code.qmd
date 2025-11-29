@@ -1,0 +1,71 @@
+---
+title: "econ2250_final_code"
+author: Komei, Lim, Shreyas, Zel
+format: html
+editor: visual
+---
+
+## ECON2250 Final Project
+
+ECON2250 Final Project running simple linear regression hypothesis test on correlation between corporate financial indicators to their stock price performance.
+
+## Data Prep
+
+```{r}
+# install.packages("coefplot")
+library(coefplot)
+library(readxl)
+library(readr)
+# Path to the Excel file
+file_path_cleaned <- "Cleaned_2014_Financial_Dataset.xlsx"
+file_path_raw <- "2014 Financial Indicators Data.xlsx"
+
+# Read the first sheet, header included by default
+df <- read_excel(file_path, sheet = 1, col_names = TRUE)
+# df <- read_excel(file_path_raw, sheet = 1, col_names = TRUE)
+
+# Make sure there is no NA row
+df[df == ""] <- NA
+df <- na.omit(df)
+
+# Rename columns to make them system compliant
+names(df) <- make.names(names(df))
+
+# Make sure all columns are numeric
+df <- df[ , sapply(df, is.numeric)]
+
+# Drop any potential column for company ticker
+df <- df[ , !(names(df) %in% "Company")]
+df <- df[ , !(names(df) %in% "X")]
+df <- df[ , !(names(df) %in% "...1")]
+
+# View the data columns
+print(names(df))
+```
+
+## Simple Linear Regression
+
+```{r}
+# Create a z-scaled set of data for normalization
+df_scaled <- df
+# Switch following if statement between TRUE/FALSE to turn normalization ON/OFF
+if (TRUE){
+df_scaled[, names(df_scaled) != "X2015.PRICE.VAR...."] <- scale(df_scaled[, names(df_scaled) != "X2015.PRICE.VAR...."])
+}
+
+# Perform simple linear regression
+# Set price var as outcome, the remaining as predictors
+model <- lm(X2015.PRICE.VAR.... ~ ., data = df_scaled)
+
+# Get a summary of the model
+summary(model)
+
+# Show MSE
+mse <- mean(model$residuals^2)
+mse
+
+# Plot the coefficients and standard error
+coefplot(model, intercept = FALSE)
+
+
+```
