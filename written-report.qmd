@@ -1,17 +1,57 @@
 ---
-title: "econ2250_final_code"
+title: "ECON 2250 Final Report: Analysis of Financial Indicators of Stocks in 2014"
 author: Komei, Lim, Shreyas, Zel
-format: html
+format: pdf
 editor: visual
 ---
 
-## ECON2250 Final Project
+## Introduction
 
 ECON2250 Final Project running simple linear regression hypothesis test on correlation between corporate financial indicators to their stock price performance.
 
-## Data Prep
+## Methodology
 
-```{r}
+:::::: {.justify style="text-align:justify"}
+Our analysis uses a financial dataset containing over 700 publicly traded companies from the year 2014. As described in the project materials, the dataset includes more than ten quantitative financial indicators such as revenue, profit margin, gross profit, earnings per share (EPS), operating expenses, market capitalization, and R&D expenditure. We restricted the sample to firms that were active and reporting financial data in 2014, and we removed duplicate entries and observations with missing values to ensure consistency and comparability across firms. These preprocessing steps produced a cleaned dataset of 788 observations prior to model selection. After cleaning the dataset, we standardized all continuous predictor variables using **z-score normalization**:
+
+::: {.center style="text-align:center;"}
+$z_i=\frac{ x_i-\bar{x}}{s}$
+:::
+
+where $x_i$ is the original value, $x$ is the sample mean of variable $i$, and $s$ is the standard deviation. This transformation places the predictors on a common scale (mean 0, standard deviation 1), which facilitates numerical stability of the regressions and makes the magnitude of the estimated coefficients more directly comparable across financial indicators. We defined stock return (%) as the outcome variable for the regression analysis, following the project framing on page 4. Predictor variables were chosen to represent a diverse set of financial performance indicators, including: R&D expenditure, profit, market capitalization, revenue, EPS, operating expenses. These indicators were selected because they capture both long-term strategic investment (e.g., R&D) and short-term profitability and liquidity measures. Their inclusion allows us to test whether firm fundamentals were informative of stock returns in the immediate post-recession environment of 2014. All data preprocessing and regression analysis were conducted in RStudio, ensuring reproducibility through documented code and GitHub version tracking. After cleaning the dataset, we examined descriptive statistics—including skewness—for all variables to understand distributional properties that might influence model performance or interpretation.
+
+To evaluate the relationship between financial indicators and stock returns, we employed simple linear regression models. For each predictor variable, we estimated the model:
+
+::: {.center style="text-align:center;"}
+$y=\alpha+\beta x$
+:::
+
+where y is stock return (%) and x is one of the six financial indicators listed above. The approach outlined on page 4 guided this choice of model. For each coefficient, we computed the standard error and associated t-statistic:
+
+::: {.center style="text-align:center;"}
+$t=\frac{\hat{\beta}}{SE(\hat{\beta})}$
+:::
+
+We used a significance level of α=0.05, allowing us to test:
+
+-   **Null hypothesis ​:** The predictor has no relationship with stock return (β=0).
+
+-   **Alternative hypothesis ​:** The predictor is correlated with stock return (β≠0).
+
+Each predictor was tested individually to isolate its marginal effect on returns. This iterative approach was selected because preliminary correlation checks did not indicate strong multicollinearity, and the project’s objective emphasized understanding the standalone relevance of each indicator.
+
+For each regression model, we examined:
+
+1.  **Estimated coefficient size and sign**
+
+2.  **Confidence intervals**
+
+3.  **p-values**
+
+4.  $R^2$
+::::::
+
+```{r include = FALSE}
 # install.packages("coefplot")
 library(coefplot)
 library(readxl)
@@ -22,8 +62,8 @@ library(ggplot2)
 library(ggridges)
 library(reshape2)
 # Path to the Excel file
-file_path_cleaned <- "Cleaned_2014_Financial_Dataset.xlsx"
-file_path_raw <- "2014 Financial Indicators Data.xlsx"
+file_path_cleaned <- "data/Cleaned_2014_Financial_Dataset.xlsx"
+# file_path_raw <- "data/2014 Financial Indicators Data.xlsx"
 
 # Read the first sheet, header included by default
 df <- read_excel(file_path_cleaned, sheet = 1, col_names = TRUE)
@@ -45,12 +85,12 @@ df <- df[ , !(names(df) %in% "X")]
 df <- df[ , !(names(df) %in% "...1")]
 
 # View the data columns
-print(names(df))
+# print(names(df))
 ```
 
-## Simple Linear Regression
+## Results
 
-```{r}
+```{r include = FALSE}
 # Create a z-scaled set of data for normalization
 df_scaled <- df
 # Switch following if statement between TRUE/FALSE to turn normalization ON/OFF
@@ -62,16 +102,12 @@ df_scaled[, names(df_scaled) != "X2015.PRICE.VAR...."] <- scale(df_scaled[, name
 # Set price var as outcome, the remaining as predictors
 model <- lm(X2015.PRICE.VAR.... ~ ., data = df_scaled)
 
-# Get a summary of the model
-summary(model)
-
 # Show MSE
-mse <- mean(model$residuals^2)
-mse
+#mse <- mean(model$residuals^2)
+#mse
+```
 
-# Plot the coefficients and standard error
-coefplot(model, intercept = FALSE)
-
+```{r echo = FALSE, message = FALSE}
 # Plot variable distributions
 df_long <- melt(df_scaled[, names(df_scaled) != "X2015.PRICE.VAR...."],
                 variable.name = "Variable",
@@ -88,3 +124,31 @@ ggplot(df_long, aes(x = Value, y = Variable, fill = Variable)) +
   theme_minimal() +
   theme(legend.position = "none")
 ```
+
+::: {.center style="text-align:center;"}
+**Figure I. Ridge plot showing z-scale normalized variable distributions.**
+:::
+
+------------------------------------------------------------------------
+
+```{r echo = FALSE}
+# Get a summary of the model
+summary(model)
+```
+
+::: {.center style="text-align:center;"}
+**Figure II. Table of predictor coefficients used in linear regression model and respective estimates, standard error, t-value, and p-value. Multiple R-squared is also shown to be extremely low at 0.0002.**
+:::
+
+------------------------------------------------------------------------
+
+```{r echo = FALSE}
+# Plot the coefficients and standard error
+coefplot(model, intercept = FALSE)
+```
+
+::: {.center style="text-align:center;"}
+**Figure III. Coefficient plot showing estimates of predictor coefficients (dot), along with the 50% confidence interval (bolded lines) and 95% confidence interval (lines). We can see that the null hypothesis (x=0 axis) lies well within the confidence intervals.**
+:::
+
+## Discussion & Conclusion
