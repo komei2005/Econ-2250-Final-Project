@@ -16,12 +16,17 @@ ECON2250 Final Project running simple linear regression hypothesis test on corre
 library(coefplot)
 library(readxl)
 library(readr)
+library(tidyquant)
+library(dplyr)
+library(ggplot2)
+library(ggridges)
+library(reshape2)
 # Path to the Excel file
 file_path_cleaned <- "Cleaned_2014_Financial_Dataset.xlsx"
 file_path_raw <- "2014 Financial Indicators Data.xlsx"
 
 # Read the first sheet, header included by default
-df <- read_excel(file_path, sheet = 1, col_names = TRUE)
+df <- read_excel(file_path_cleaned, sheet = 1, col_names = TRUE)
 # df <- read_excel(file_path_raw, sheet = 1, col_names = TRUE)
 
 # Make sure there is no NA row
@@ -67,5 +72,19 @@ mse
 # Plot the coefficients and standard error
 coefplot(model, intercept = FALSE)
 
+# Plot variable distributions
+df_long <- melt(df_scaled[, names(df_scaled) != "X2015.PRICE.VAR...."],
+                variable.name = "Variable",
+                value.name = "Value")
 
+ggplot(df_long, aes(x = Value, y = Variable, fill = Variable)) +
+  geom_density_ridges(alpha = 0.7, scale = 2) +
+  coord_cartesian(xlim = c(-1, 1)) +
+  labs(
+    title = "Ridge Plot of All Financial Variables (Standardized)",
+    x = "Z-score",
+    y = "Variable"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
