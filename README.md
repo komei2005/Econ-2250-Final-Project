@@ -1,4 +1,4 @@
-# Analysis of Financial Indicators of Stocks in 2014
+# ECON2250 Final Project: Analysis of Financial Indicators of Stocks in 2014
 Members: Lim, Komei, Shreyas, Zel
 
 This project analyzes financial data from over 700 publicly traded companies in 2014 to determine whether common financial indicators—such as revenue, profit, EPS, market capitalization, operating expenses, and R&D expenditure—help explain stock returns. After cleaning the dataset and applying z-score normalization, we performed descriptive analysis and simple linear regressions to test whether these indicators were statistically associated with stock performance. Results showed that none of the financial variables significantly predicted stock returns in 2014.
