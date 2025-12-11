@@ -7,7 +7,35 @@ editor: visual
 
 ## Introduction
 
-ECON2250 Final Project running simple linear regression hypothesis test on correlation between corporate financial indicators to their stock price performance.
+::: {.justify style="text-align:justify"}
+To start off it is important to provide a quick introduction into the project’s motivations, dataset, description, and key variables (both outcome and indicator), and research question. Starting off by looking into our group’s motivations, we were interested in finding out how companies are able to recover in a post recession economy. This question on the surface may seem boring, yet if answered can play a key role in policy decisions and how companies are able to navigate uncertain times. The way in which companies and governments respond to these dramatic changes play a big role in a country's well being, overall stability, and future investment decisions on both an individual and institutional level making this study both valuable and intriguing, hence serving as our motivation. After this, we realized that we needed to find a data set that we could use that preferably was both recent and directly followed a well known economic downturn. This was when we decided to settle on the 2009 financial crisis as this was an event that we all had lived through and had genuine interest in. Following this we found a data set that contained at least ten quantitative financial variables on 2000+ publicly traded companies in 2014. This data is primarily centered around key metrics such as revenue, profit margin, gross profit, R&D expenditure, Earnings Per Share (EPS), market capitalization, and operating expenses. As we started our analysis we soon realized that we needed to clean our data due to duplicates, missing values, de-listed companies, among other reasons that left us with a final dataset of 788+ companies which we would analyze.
+
+With this new dataset, we found that it was important that we clearly define all variables that we planned to discuss within this project and report:
+
+**Outcome Variables:**
+
+**Stock Return -** The percentage change in a stock over the year of 2014, which we are using to predict movement of post rescission economies.
+
+**Predictor variables:**
+
+**Revenue -** The total income that a company makes before subtracting expenses or any other operating costs.
+
+**Profit -** The net earnings of a company after all the expenses have been subtracted. This is basically Revenue - Total Expenses.
+
+**Profit Margin -** This is similar to profit, but instead is the percentage of profit that is left after expenses. 
+
+**Gross Profit -** This is revenue minus the cost of goods sold, which is better explained as the amount that is left after production and delivery costs.
+
+**R&D Expenditure -** This is the amount of money it takes to research and develop a product. This helps with long term growth and is included in the per piece sold cost.
+
+**Market Capitalization -** This is the total value of the company which is basically the share price times the amount of shares available.
+
+**Earnings Per Share (EPS) -** This is the total income per quarter divided by the shares available and is a key value for investors and company well being
+
+**Operating Expenses -** This is the amount of money it takes for the business to maintain its operations and production with expenses like marketing being included.
+
+Now that we fully understood the data provided to us along with the variables we needed to conduct a brief descriptive data analysis that found that the stock returns had a wide skewness with most companies having gains that were pretty small or within historical trends. There were also a couple of companies that were outliers with either extreme gains or losses. Additionally, the predictor variables themselves had substantial variation. Things like revenue and market cap had a wide variety of data across various industries while things like R&D and were more focused in technology based fields. All together after understanding our motivations, cleaning our data, and understanding some trends we made the following research question: “How do financial indicators like R&D expenditure, revenue, and profit relate to stock returns in 2014 and what can it tell us about post-recession economies?”.
+:::
 
 ## Methodology
 
@@ -133,11 +161,11 @@ ggplot(df_long, aes(x = Value, y = Variable, fill = Variable)) +
 
 ```{r echo = FALSE}
 # Get a summary of the model
-summary(model)
+summary(model)$coefficients
 ```
 
 ::: {.center style="text-align:center;"}
-**Figure II. Table of predictor coefficients used in linear regression model and respective estimates, standard error, t-value, and p-value. Multiple R-squared is also shown to be extremely low at 0.0002.**
+**Figure II. Table of predictor coefficients used in linear regression model and respective estimates, standard error, t-value, and p-value. Multiple R-squared is also found to be extremely low at 0.0002.**
 :::
 
 ------------------------------------------------------------------------
